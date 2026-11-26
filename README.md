@@ -45,6 +45,8 @@ node build.mjs chromium
 
 It stays installed after you restart the browser. `node build.mjs` builds both `dist/firefox` and `dist/chromium` (plus a `.zip` of each if the `zip` command is available, e.g. to upload to the Chrome Web Store).
 
+Ready-made zips for each version are on the [Releases](https://github.com/david1091/gog-regional-price-extension/releases) page. To publish a new one, bump `version` in both manifests and run the **Release** workflow (Actions → Release → Run workflow).
+
 ### Data sources
 - Prices: `https://api.gog.com/products/{id}/prices?countryCode=XX` (unofficial GOG API).
 - Game lookup (fallback): `https://catalog.gog.com/v1/catalog`.
@@ -97,6 +99,8 @@ node build.mjs chromium
 3. Pulsa **Cargar descomprimida** y elige la carpeta `dist/chromium`.
 
 Se mantiene instalada al reiniciar el navegador. `node build.mjs` genera `dist/firefox` y `dist/chromium` (y un `.zip` de cada uno si tienes el comando `zip`, por ejemplo para subirlo a la Chrome Web Store).
+
+Los zip de cada versión están en la página de [Releases](https://github.com/david1091/gog-regional-price-extension/releases). Para publicar una nueva, sube `version` en los dos manifiestos y lanza el workflow **Release** (Actions → Release → Run workflow).
 
 ### Fuentes de datos
 - Precios: `https://api.gog.com/products/{id}/prices?countryCode=XX` (API no oficial de GOG).
