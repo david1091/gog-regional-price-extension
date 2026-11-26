@@ -1,0 +1,113 @@
+{
+  "extName": {
+    "message": "GOG Regional Prices"
+  },
+  "extDescription": {
+    "message": "Shows a game's regional prices while you browse the GOG.com store, converted to your currency."
+  },
+  "panelTitle": {
+    "message": "Regional prices"
+  },
+  "clickToLoad": {
+    "message": "· click to load"
+  },
+  "refresh": {
+    "message": "Clear price cache and reload"
+  },
+  "options": {
+    "message": "Options"
+  },
+  "toggle": {
+    "message": "Show or hide"
+  },
+  "loading": {
+    "message": "Loading…"
+  },
+  "querying": {
+    "message": "Checking $1 regions…"
+  },
+  "cantIdentify": {
+    "message": "Couldn't identify this game."
+  },
+  "errorPrefix": {
+    "message": "Error"
+  },
+  "yourRegion": {
+    "message": "Your region"
+  },
+  "fixedCurrency": {
+    "message": "fixed currency"
+  },
+  "cheapest": {
+    "message": "Cheapest"
+  },
+  "vs": {
+    "message": "vs $1"
+  },
+  "colCountry": {
+    "message": "Country"
+  },
+  "colLocal": {
+    "message": "Local"
+  },
+  "notAvailable": {
+    "message": "Not available"
+  },
+  "noPrice": {
+    "message": "No price"
+  },
+  "rateLimited": {
+    "message": "GOG rate limit reached, try later"
+  },
+  "footer": {
+    "message": "Approximate conversion to $1 (exchange rates: $2). Prices may not include local taxes."
+  },
+  "optCurrencyTitle": {
+    "message": "Currency"
+  },
+  "optCurrencyHelp": {
+    "message": "Automatic uses your region's currency. If you pick one, it will always be used."
+  },
+  "optAutoCurrency": {
+    "message": "Automatic (based on your region)"
+  },
+  "optRefTitle": {
+    "message": "Reference country"
+  },
+  "optRefHelp": {
+    "message": "Percentage differences are calculated against this country."
+  },
+  "optAutoRegion": {
+    "message": "Automatic (your region)"
+  },
+  "optCountriesTitle": {
+    "message": "Countries to compare"
+  },
+  "optAll": {
+    "message": "All"
+  },
+  "optNone": {
+    "message": "None"
+  },
+  "optSave": {
+    "message": "Save"
+  },
+  "optSaved": {
+    "message": "Saved ✓"
+  },
+  "limitTitle": {
+    "message": "⚠ GOG request limit"
+  },
+  "limitText": {
+    "message": "GOG allows about 200 price requests per hour from your connection. Each selected country is one request per game, so the more countries you select, the more requests are made and the fewer games you can check per hour. If you hit the limit, you may have to wait up to an hour."
+  },
+  "limitEstimate": {
+    "message": "With your selection: $1 requests per game ≈ $2 games per hour."
+  },
+  "limitEstimateNone": {
+    "message": "Select at least one country."
+  },
+  "panelLimit": {
+    "message": "This lookup uses up to $1 of the ~200 requests/hour GOG allows (cached ones don't count). Fewer countries in ⚙ = more games per hour."
+  }
+}

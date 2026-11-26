@@ -1,0 +1,30 @@
+#gogrp-panel{position:fixed;right:16px;bottom:16px;z-index:2147483000;width:360px;max-height:70vh;display:flex;flex-direction:column;
+  background:#1d1d22;color:#ececf1;border:1px solid #34343d;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.45);
+  font:13px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+#gogrp-panel *{box-sizing:border-box}
+#gogrp-panel .gogrp-head{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;cursor:pointer;
+  background:#2a2140;border-radius:12px 12px 0 0;user-select:none}
+#gogrp-panel.gogrp-collapsed .gogrp-head{border-radius:12px}
+#gogrp-panel .gogrp-title{font-weight:600}
+#gogrp-panel .gogrp-btn{background:none;border:0;color:#cbb6ff;font-size:15px;cursor:pointer;padding:0 4px}
+#gogrp-panel .gogrp-btn:hover{color:#fff}
+#gogrp-panel.gogrp-collapsed .gogrp-body{display:none}
+#gogrp-panel.gogrp-collapsed [data-act="toggle"]{transform:rotate(180deg)}
+#gogrp-panel .gogrp-body{overflow:auto;padding:8px 10px 10px}
+#gogrp-panel .gogrp-msg{padding:10px 2px;color:#a5a5b2}
+#gogrp-panel .gogrp-sum{padding:4px 2px 8px}
+#gogrp-panel .gogrp-table{width:100%;border-collapse:collapse}
+#gogrp-panel th{font-weight:500;color:#9a9aa8;text-align:left;font-size:11px;padding:3px 4px;border-bottom:1px solid #34343d}
+#gogrp-panel td{padding:5px 4px;border-bottom:1px solid #2a2a31;vertical-align:top;white-space:nowrap}
+#gogrp-panel td:nth-child(n+2),#gogrp-panel th:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums}
+#gogrp-panel s{color:#80808c;font-size:11px;display:block}
+#gogrp-panel .gogrp-bar{height:3px;background:#a66bff;border-radius:2px;margin:3px 0 0 auto}
+#gogrp-panel .gogrp-good{color:#46d68f}
+#gogrp-panel .gogrp-bad{color:#ff7070}
+#gogrp-panel .gogrp-ref td{background:#262033}
+#gogrp-panel .gogrp-na td{color:#77777f}
+#gogrp-panel .gogrp-foot{color:#7f7f8c;font-size:11px;padding-top:8px}
+#gogrp-panel .gogrp-hint{font-weight:400;color:#b9a8e6;font-size:11px;margin-left:6px}
+#gogrp-panel:not(.gogrp-collapsed) .gogrp-hint{display:none}
+#gogrp-panel .gogrp-region{color:#a5a5b2;font-size:12px;padding:2px 2px 4px}
+#gogrp-panel .gogrp-limit{margin-top:8px;padding:6px 8px;border-radius:6px;background:#3a2f12;color:#f3d27a;font-size:11.5px}

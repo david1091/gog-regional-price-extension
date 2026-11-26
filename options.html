@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+body{font:14px system-ui,sans-serif;padding:12px;min-width:440px}
+h3{margin:14px 0 6px}h3:first-child{margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 12px;margin:8px 0 14px}
+label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}small{color:#777;display:block;margin-top:4px}
+#st{color:green;margin-left:8px}
+.warn{background:#fff4d6;border:1px solid #e8c25a;color:#5a4300;border-radius:8px;padding:8px 10px;margin:6px 0 4px;font-size:13px;line-height:1.45}
+.warn #estimate{font-weight:600}select{max-width:100%}
+</style></head><body>
+<h3 data-i18n="optCurrencyTitle"></h3>
+<select id="cur"></select>
+<small data-i18n="optCurrencyHelp"></small>
+
+<h3 data-i18n="optRefTitle"></h3>
+<select id="ref"></select>
+<small data-i18n="optRefHelp"></small>
+
+<h3 data-i18n="optCountriesTitle"></h3>
+<div class="warn"><b data-i18n="limitTitle"></b><br><span data-i18n="limitText"></span><br><span id="estimate"></span></div>
+<div class="grid" id="list"></div>
+<button id="all" data-i18n="optAll"></button>
+<button id="none" data-i18n="optNone"></button>
+<button id="save" data-i18n="optSave"></button><span id="st"></span>
+<script src="countries.js"></script>
+<script src="options.js"></script>
+</body></html>

@@ -1,0 +1,56 @@
+{
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "version": "1.2.0",
+  "description": "__MSG_extDescription__",
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "permissions": [
+    "storage",
+    "https://www.gog.com/*",
+    "https://api.gog.com/*",
+    "https://catalog.gog.com/*",
+    "https://open.er-api.com/*",
+    "https://api.frankfurter.app/*"
+  ],
+  "background": {
+    "scripts": [
+      "countries.js",
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.gog.com/*"
+      ],
+      "js": [
+        "countries.js",
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "gog-precios-regionales@local",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "default_locale": "en"
+}
