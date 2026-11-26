@@ -10,6 +10,9 @@
     try { return new Intl.NumberFormat(lang, { style: "currency", currency: cur }).format(v); }
     catch (e) { return v.toFixed(2) + " " + cur; }
   };
+  // Igual que fmt, pero permite partir la línea entre la cifra y la moneda
+  // (para precios locales largos, p. ej. pesos argentinos).
+  const fmtWrap = (v, cur) => fmt(v, cur).replace(/\u00A0/g, " ");
 
   // Estado de la ficha actual
   let state = null; // {slug, loaded, loading}
@@ -118,15 +121,15 @@
     for (const r of rows) {
       if (r.conv == null && r.error) {
         const msg = r.error === "na" ? t("notAvailable") : r.error === "limit" ? t("rateLimited") : r.error === "noprice" ? t("noPrice") : r.error;
-        html += `<tr class="gogrp-na"><td>${name(r.cc)}</td><td colspan="3">${esc(msg)}</td></tr>`;
+        html += `<tr class="gogrp-na"><td class="gogrp-country">${name(r.cc)}</td><td class="gogrp-local" colspan="3">${esc(msg)}</td></tr>`;
         continue;
       }
       const diff = ref && r.conv != null ? (r.conv / ref.conv - 1) * 100 : null;
       const cls = diff == null ? "" : diff < -0.5 ? "gogrp-good" : diff > 0.5 ? "gogrp-bad" : "";
-      const disc = r.base && r.base > r.final ? ` <s>${fmt(r.base, r.cur)}</s>` : "";
+      const disc = r.base && r.base > r.final ? ` <s>${fmtWrap(r.base, r.cur)}</s>` : "";
       html += `<tr${ref && r.cc === ref.cc ? ' class="gogrp-ref"' : ""}>
-        <td>${name(r.cc)}</td>
-        <td>${fmt(r.final, r.cur)}${disc}</td>
+        <td class="gogrp-country">${name(r.cc)}</td>
+        <td class="gogrp-local">${fmtWrap(r.final, r.cur)}${disc}</td>
         <td><b>${fmt(r.conv, cur)}</b><div class="gogrp-bar" style="width:${r.conv ? (100 * r.conv / max).toFixed(0) : 0}%"></div></td>
         <td class="${cls}">${diff == null ? "—" : (diff > 0 ? "+" : "") + diff.toFixed(0) + "%"}</td></tr>`;
     }

@@ -1,5 +1,9 @@
 // Datos compartidos por background, content script y opciones.
 
+// Compatibilidad Firefox / Chromium: en Chromium (MV3) no existe `browser`,
+// pero `chrome.*` devuelve promesas igual que la API de Firefox.
+var browser = globalThis.browser || globalThis.chrome;
+
 // Moneda local de cada país (para convertir según la región del usuario).
 var GOG_COUNTRY_CURRENCY = {
   ES: "EUR", DE: "EUR", FR: "EUR", IT: "EUR", PT: "EUR", NL: "EUR", BE: "EUR", AT: "EUR", IE: "EUR",

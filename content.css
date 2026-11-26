@@ -1,4 +1,4 @@
-#gogrp-panel{position:fixed;right:16px;bottom:16px;z-index:2147483000;width:360px;max-height:70vh;display:flex;flex-direction:column;
+#gogrp-panel{position:fixed;right:16px;bottom:16px;z-index:2147483000;width:380px;max-width:calc(100vw - 32px);max-height:70vh;display:flex;flex-direction:column;
   background:#1d1d22;color:#ececf1;border:1px solid #34343d;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.45);
   font:13px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
 #gogrp-panel *{box-sizing:border-box}
@@ -10,12 +10,15 @@
 #gogrp-panel .gogrp-btn:hover{color:#fff}
 #gogrp-panel.gogrp-collapsed .gogrp-body{display:none}
 #gogrp-panel.gogrp-collapsed [data-act="toggle"]{transform:rotate(180deg)}
-#gogrp-panel .gogrp-body{overflow:auto;padding:8px 10px 10px}
+#gogrp-panel .gogrp-body{overflow-y:auto;overflow-x:hidden;padding:8px 10px 10px}
 #gogrp-panel .gogrp-msg{padding:10px 2px;color:#a5a5b2}
 #gogrp-panel .gogrp-sum{padding:4px 2px 8px}
 #gogrp-panel .gogrp-table{width:100%;border-collapse:collapse}
 #gogrp-panel th{font-weight:500;color:#9a9aa8;text-align:left;font-size:11px;padding:3px 4px;border-bottom:1px solid #34343d}
-#gogrp-panel td{padding:5px 4px;border-bottom:1px solid #2a2a31;vertical-align:top;white-space:nowrap}
+#gogrp-panel table,#gogrp-panel th,#gogrp-panel td{font-family:inherit;letter-spacing:normal;text-transform:none;width:auto;min-width:0}
+#gogrp-panel td{padding:5px 4px;border-bottom:1px solid #2a2a31;vertical-align:top;white-space:nowrap;font-size:13px}
+#gogrp-panel td.gogrp-country{white-space:normal;overflow-wrap:anywhere}
+#gogrp-panel td.gogrp-local{white-space:normal;font-size:12px}
 #gogrp-panel td:nth-child(n+2),#gogrp-panel th:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums}
 #gogrp-panel s{color:#80808c;font-size:11px;display:block}
 #gogrp-panel .gogrp-bar{height:3px;background:#a66bff;border-radius:2px;margin:3px 0 0 auto}
