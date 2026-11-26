@@ -88,7 +88,7 @@ async function compare(id, countries, target) {
   return { rows, target, source };
 }
 
-browser.runtime.onMessage.addListener(async (msg) => {
+async function handle(msg) {
   try {
     if (msg.type === "settings") return { settings: await browser.storage.sync.get(GOG_DEFAULTS) };
     if (msg.type === "resolveId") return { id: await idFromSlug(msg.slug, msg.title) };
@@ -102,4 +102,11 @@ browser.runtime.onMessage.addListener(async (msg) => {
   } catch (e) {
     return { error: String(e.message || e) };
   }
+}
+
+// sendResponse + `return true` funciona en Firefox y en Chromium
+// (Chromium no admite que el listener devuelva una promesa).
+browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  handle(msg).then(sendResponse);
+  return true;
 });
