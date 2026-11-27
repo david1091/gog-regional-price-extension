@@ -3,7 +3,20 @@
 (() => {
   const PANEL_ID = "gogrp-panel";
   const t = (k, ...s) => browser.i18n.getMessage(k, s.map(String)) || k;
-  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  // Crea un elemento sin usar innerHTML: h("td", {class: "x"}, "texto", otroNodo).
+  // Los textos se insertan como nodos de texto, así que nunca se interpretan como HTML.
+  const h = (tag, attrs, ...kids) => {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v == null || v === false) continue;
+      if (k === "style") Object.assign(el.style, v);
+      else el.setAttribute(k, v);
+    }
+    for (const k of kids.flat()) if (k != null && k !== "") el.append(k);
+    return el;
+  };
+  const setBody = (...kids) => { const b = bodyEl(); if (b) b.replaceChildren(...kids); };
+  const msgEl = (text, extra) => h("div", { class: "gogrp-msg" + (extra ? " " + extra : "") }, text);
   const lang = gogUiLang();
   const fmt = (v, cur) => {
     if (v == null) return "—";
@@ -71,16 +84,15 @@
     const p = document.createElement("div");
     p.id = PANEL_ID;
     p.className = "gogrp-collapsed";
-    p.innerHTML = `
-      <div class="gogrp-head" title="${esc(t("toggle"))}">
-        <span class="gogrp-title">🌍 ${esc(t("panelTitle"))} <span class="gogrp-hint">${esc(t("clickToLoad"))}</span></span>
-        <span class="gogrp-actions">
-          <button class="gogrp-btn" data-act="refresh" title="${esc(t("refresh"))}">↻</button>
-          <button class="gogrp-btn" data-act="opts" title="${esc(t("options"))}">⚙</button>
-          <button class="gogrp-btn" data-act="toggle" title="${esc(t("toggle"))}">▾</button>
-        </span>
-      </div>
-      <div class="gogrp-body"></div>`;
+    const btn = (act, title, icon) => h("button", { class: "gogrp-btn", "data-act": act, title }, icon);
+    p.append(
+      h("div", { class: "gogrp-head", title: t("toggle") },
+        h("span", { class: "gogrp-title" }, "🌍 " + t("panelTitle") + " ", h("span", { class: "gogrp-hint" }, t("clickToLoad"))),
+        h("span", { class: "gogrp-actions" },
+          btn("refresh", t("refresh"), "↻"), " ",
+          btn("opts", t("options"), "⚙"), " ",
+          btn("toggle", t("toggle"), "▾"))),
+      h("div", { class: "gogrp-body" }));
     document.body.appendChild(p);
 
     p.querySelector(".gogrp-head").addEventListener("click", async (e) => {
@@ -109,34 +121,43 @@
     const ok = rows.filter(r => r.conv != null);
     const ref = rows.find(r => r.cc === refCC && r.conv != null);
     const max = Math.max(1e-9, ...ok.map(r => r.conv));
-    const name = cc => `${gogFlag(cc)} ${esc(gogCountryName(cc))}`;
+    const name = cc => `${gogFlag(cc)} ${gogCountryName(cc)}`;
+    const out = [];
 
-    let html = `<div class="gogrp-region">${esc(t("yourRegion"))}: ${name(region.country)} · ${esc(cur)}${settings.currency !== "auto" ? " (" + esc(t("fixedCurrency")) + ")" : ""}</div>`;
+    out.push(h("div", { class: "gogrp-region" },
+      `${t("yourRegion")}: ${name(region.country)} · ${cur}${settings.currency !== "auto" ? " (" + t("fixedCurrency") + ")" : ""}`));
     if (ok.length) {
-      html += `<div class="gogrp-sum">${esc(t("cheapest"))}: <b>${name(ok[0].cc)}</b> · ${fmt(ok[0].conv, cur)}`;
-      if (ref && ok[0].cc !== ref.cc) html += ` <span class="gogrp-good">(${((ok[0].conv / ref.conv - 1) * 100).toFixed(0)}% ${esc(t("vs", ref.cc))})</span>`;
-      html += `</div>`;
+      const sum = h("div", { class: "gogrp-sum" }, t("cheapest") + ": ", h("b", null, name(ok[0].cc)), " · " + fmt(ok[0].conv, cur));
+      if (ref && ok[0].cc !== ref.cc)
+        sum.append(" ", h("span", { class: "gogrp-good" }, `(${((ok[0].conv / ref.conv - 1) * 100).toFixed(0)}% ${t("vs", ref.cc)})`));
+      out.push(sum);
     }
-    html += `<table class="gogrp-table"><thead><tr><th>${esc(t("colCountry"))}</th><th>${esc(t("colLocal"))}</th><th>${esc(cur)}</th><th>${esc(t("vs", refCC))}</th></tr></thead><tbody>`;
+
+    const tbody = h("tbody");
     for (const r of rows) {
       if (r.conv == null && r.error) {
         const msg = r.error === "na" ? t("notAvailable") : r.error === "limit" ? t("rateLimited") : r.error === "noprice" ? t("noPrice") : r.error;
-        html += `<tr class="gogrp-na"><td class="gogrp-country">${name(r.cc)}</td><td class="gogrp-local" colspan="3">${esc(msg)}</td></tr>`;
+        tbody.append(h("tr", { class: "gogrp-na" },
+          h("td", { class: "gogrp-country" }, name(r.cc)),
+          h("td", { class: "gogrp-local", colspan: "3" }, msg)));
         continue;
       }
       const diff = ref && r.conv != null ? (r.conv / ref.conv - 1) * 100 : null;
-      const cls = diff == null ? "" : diff < -0.5 ? "gogrp-good" : diff > 0.5 ? "gogrp-bad" : "";
-      const disc = r.base && r.base > r.final ? ` <s>${fmtWrap(r.base, r.cur)}</s>` : "";
-      html += `<tr${ref && r.cc === ref.cc ? ' class="gogrp-ref"' : ""}>
-        <td class="gogrp-country">${name(r.cc)}</td>
-        <td class="gogrp-local">${fmtWrap(r.final, r.cur)}${disc}</td>
-        <td><b>${fmt(r.conv, cur)}</b><div class="gogrp-bar" style="width:${r.conv ? (100 * r.conv / max).toFixed(0) : 0}%"></div></td>
-        <td class="${cls}">${diff == null ? "—" : (diff > 0 ? "+" : "") + diff.toFixed(0) + "%"}</td></tr>`;
+      const cls = diff == null ? null : diff < -0.5 ? "gogrp-good" : diff > 0.5 ? "gogrp-bad" : null;
+      tbody.append(h("tr", { class: ref && r.cc === ref.cc ? "gogrp-ref" : null },
+        h("td", { class: "gogrp-country" }, name(r.cc)),
+        h("td", { class: "gogrp-local" }, fmtWrap(r.final, r.cur),
+          r.base && r.base > r.final ? [" ", h("s", null, fmtWrap(r.base, r.cur))] : null),
+        h("td", null, h("b", null, fmt(r.conv, cur)),
+          h("div", { class: "gogrp-bar", style: { width: (r.conv ? (100 * r.conv / max).toFixed(0) : 0) + "%" } })),
+        h("td", { class: cls }, diff == null ? "—" : (diff > 0 ? "+" : "") + diff.toFixed(0) + "%")));
     }
-    html += `</tbody></table>
-      <div class="gogrp-limit">⚠ ${esc(t("panelLimit", rows.length))}</div>
-      <div class="gogrp-foot">${esc(t("footer", cur, data.source))}</div>`;
-    bodyEl().innerHTML = html;
+    out.push(h("table", { class: "gogrp-table" },
+      h("thead", null, h("tr", null, h("th", null, t("colCountry")), h("th", null, t("colLocal")), h("th", null, cur), h("th", null, t("vs", refCC)))),
+      tbody));
+    out.push(h("div", { class: "gogrp-limit" }, "⚠ " + t("panelLimit", rows.length)));
+    out.push(h("div", { class: "gogrp-foot" }, t("footer", cur, data.source)));
+    setBody(...out);
   }
 
   async function load() {
@@ -144,7 +165,7 @@
     const body = bodyEl();
     if (!body) return;
     my.loading = true;
-    body.innerHTML = `<div class="gogrp-msg">${esc(t("loading"))}</div>`;
+    body.replaceChildren(msgEl(t("loading")));
     try {
       const { settings } = await browser.runtime.sendMessage({ type: "settings" });
       const region = detectRegion();
@@ -159,9 +180,9 @@
         id = r && r.id;
       }
       if (state !== my) return;
-      if (!id) { body.innerHTML = `<div class="gogrp-msg">${esc(t("cantIdentify"))}</div>`; return; }
+      if (!id) { body.replaceChildren(msgEl(t("cantIdentify"))); return; }
 
-      body.innerHTML = `<div class="gogrp-msg">${esc(t("querying", countries.length))}</div>`;
+      body.replaceChildren(msgEl(t("querying", countries.length)));
       const data = await browser.runtime.sendMessage({ type: "compare", id, countries, target });
       if (state !== my) return;
       if (!data || data.error) throw new Error(data && data.error);
@@ -170,7 +191,7 @@
       const hint = document.querySelector(`#${PANEL_ID} .gogrp-hint`);
       if (hint) hint.remove();
     } catch (e) {
-      if (state === my) body.innerHTML = `<div class="gogrp-msg gogrp-bad">${esc(t("errorPrefix"))}: ${esc(e.message || e)}</div>`;
+      if (state === my) body.replaceChildren(msgEl(`${t("errorPrefix")}: ${e.message || e}`, "gogrp-bad"));
     } finally {
       my.loading = false;
     }
